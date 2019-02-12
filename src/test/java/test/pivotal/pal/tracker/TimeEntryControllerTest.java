@@ -41,6 +41,8 @@ public class TimeEntryControllerTest {
 
 
         ResponseEntity response = controller.create(timeEntryToCreate);
+        System.out.println("************************* Response while Creating newTimeEntry ********************");
+        System.out.println(response);
 
 
         verify(timeEntryRepository).create(timeEntryToCreate);
@@ -59,6 +61,8 @@ public class TimeEntryControllerTest {
             .find(timeEntryId);
 
         ResponseEntity<TimeEntry> response = controller.read(timeEntryId);
+        System.out.println("************************* Response while read ********************");
+        System.out.println(response);
 
         verify(timeEntryRepository).find(timeEntryId);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -73,6 +77,8 @@ public class TimeEntryControllerTest {
             .find(nonExistentTimeEntryId);
 
         ResponseEntity<TimeEntry> response = controller.read(nonExistentTimeEntryId);
+        System.out.println("************************* Response while Reading ********************");
+        System.out.println(response);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
@@ -85,6 +91,9 @@ public class TimeEntryControllerTest {
         doReturn(expected).when(timeEntryRepository).list();
 
         ResponseEntity<List<TimeEntry>> response = controller.list();
+
+        System.out.println("************************* Response while Creating newTimeEntry ********************");
+        System.out.println(response);
 
         verify(timeEntryRepository).list();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -103,6 +112,9 @@ public class TimeEntryControllerTest {
 
         ResponseEntity response = controller.update(timeEntryId, expected);
 
+        System.out.println("************************* Response while updating newTimeEntry ********************");
+        System.out.println(response);
+
         verify(timeEntryRepository).update(timeEntryId, expected);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(expected);
@@ -116,6 +128,10 @@ public class TimeEntryControllerTest {
             .update(eq(nonExistentTimeEntryId), any(TimeEntry.class));
 
         ResponseEntity response = controller.update(nonExistentTimeEntryId, new TimeEntry());
+
+        System.out.println("************************* Response while updating newTimeEntry ********************");
+        System.out.println(response);
+
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
@@ -123,6 +139,8 @@ public class TimeEntryControllerTest {
     public void testDelete() throws Exception {
         long timeEntryId = 1L;
         ResponseEntity<TimeEntry> response = controller.delete(timeEntryId);
+        System.out.println("************************* Response while deleting newTimeEntry ********************");
+        System.out.println(response);
         verify(timeEntryRepository).delete(timeEntryId);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }

@@ -1,33 +1,69 @@
 package io.pivotal.pal.tracker;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import io.pivotal.pal.tracker.InMemoryTimeEntryRepository;
 
+import java.sql.Time;
 import java.util.List;
 
 @RestController
+@RequestMapping("/time-entries")
 public class TimeEntryController {
 
-    public TimeEntryController(TimeEntryRepository timeEntryRepository) {
+    private TimeEntryRepository timeEntriesRepo;
+
+    public TimeEntryController(TimeEntryRepository timeEntriesRepo) {
+        this.timeEntriesRepo = timeEntriesRepo;
     }
 
-    public ResponseEntity  create(TimeEntry timeEntry){
-        return null;
+    @PostMapping
+    public ResponseEntity<TimeEntry> create(@RequestBody TimeEntry timeEntry) {
+        System.out.println("Inside the create controller method");
+        System.out.println("the coming controller request is" + timeEntry.toString());
+        TimeEntry createdTimeEntry = timeEntriesRepo.create(timeEntry);
+        System.out.println("the createdRimeEntry request is" + createdTimeEntry.toString());
+        return new ResponseEntity<>(createdTimeEntry, HttpStatus.CREATED);
+
     }
 
-    public ResponseEntity<TimeEntry> read(long id){
-        return null;
+    @GetMapping("{id}")
+    public ResponseEntity<TimeEntry> read(@PathVariable Long id) {
+        System.out.println("Inside the read method");
+        TimeEntry readTimeEntry = timeEntriesRepo.find(id);
+        if(readTimeEntry != null) {
+            return new ResponseEntity<>(readTimeEntry, HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(readTimeEntry, HttpStatus.NOT_FOUND);
+        }
     }
 
-    public ResponseEntity  update(long id, TimeEntry timeEntry){
-        return null;
-    }
-
-    public ResponseEntity<TimeEntry> delete(long timeEntryId) {
-        return null;
-    }
-
+    @GetMapping
     public ResponseEntity<List<TimeEntry>> list() {
-        return null;
+        System.out.println("Inside the list method");
+        return new ResponseEntity<>(timeEntriesRepo.list(), HttpStatus.OK);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity update(@PathVariable Long id, @RequestBody TimeEntry expected) {
+        System.out.println("Inside the update controller method");
+        TimeEntry updatedTimeEntry = timeEntriesRepo.update(id, expected);
+        if(updatedTimeEntry != null) {
+            return new ResponseEntity<>(updatedTimeEntry, HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(updatedTimeEntry, HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<TimeEntry> delete(@PathVariable Long id) {
+        System.out.println("Inside the delete controller method");
+        timeEntriesRepo.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
     }
 }

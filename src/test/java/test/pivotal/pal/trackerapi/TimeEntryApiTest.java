@@ -34,7 +34,9 @@ public class TimeEntryApiTest {
 
     @Test
     public void testCreate() throws Exception {
+        System.out.println("Time entry passed is " + timeEntry.toString());
         ResponseEntity<String> createResponse = restTemplate.postForEntity("/time-entries", timeEntry, String.class);
+        System.out.println("*******************************createResponse is***********" + createResponse);
 
 
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -69,10 +71,10 @@ public class TimeEntryApiTest {
     @Test
     public void testRead() throws Exception {
         Long id = createTimeEntry();
-
+        System.out.println("I am here");
 
         ResponseEntity<String> readResponse = this.restTemplate.getForEntity("/time-entries/" + id, String.class);
-
+        System.out.println("*******************************ReadResponse is***********" + readResponse);
 
         assertThat(readResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         DocumentContext readJson = parse(readResponse.getBody());
@@ -119,12 +121,13 @@ public class TimeEntryApiTest {
     }
 
     private Long createTimeEntry() {
+        System.out.println("I am here12");
         HttpEntity<TimeEntry> entity = new HttpEntity<>(timeEntry);
-
+        System.out.println("time entry is" + timeEntry.getHours() + timeEntry.getDate() + "hahahaha");
         ResponseEntity<TimeEntry> response = restTemplate.exchange("/time-entries", HttpMethod.POST, entity, TimeEntry.class);
-
+        System.out.println("This is the response" + response);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-
+        System.out.println("I am here33");
         return response.getBody().getId();
     }
 }
