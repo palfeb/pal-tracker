@@ -2,6 +2,7 @@ package test.pivotal.pal.tracker;
 
 import io.pivotal.pal.tracker.WelcomeController;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Value;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -9,6 +10,7 @@ public class WelcomeControllerTest {
 
     @Test
     public void itSaysHello() throws Exception {
+        System.out.println("Value of welcome in testcase" + "A welcome message");
         WelcomeController controller = new WelcomeController("A welcome message");
 
         assertThat(controller.sayHello()).isEqualTo("A welcome message");
