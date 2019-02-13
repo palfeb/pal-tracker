@@ -8,5 +8,7 @@ public interface TimeEntryRepository {
     void delete(long id);
     TimeEntry create(TimeEntry timeEntry);
     List<TimeEntry> list();
-    TimeEntry update(long l, TimeEntry timeEntry);
+
+
+    TimeEntry update(long l, TimeEntry updatedTimeEntry);
 }
