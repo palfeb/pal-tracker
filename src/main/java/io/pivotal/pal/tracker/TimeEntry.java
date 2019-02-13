@@ -16,7 +16,6 @@ public class TimeEntry{
 
     public TimeEntry(long projectId, long userId, LocalDate parse, int i) {
         System.out.println("constructor with four parameters" + " projectId " +projectId+ " userID " + userId + " parse " + parse + " hours " + i);
-        this.id = id + 1;
         this.projectId = projectId;
         this.userId = userId;
         this.date = parse;
