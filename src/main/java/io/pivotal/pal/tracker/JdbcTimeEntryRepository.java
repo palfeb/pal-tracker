@@ -24,33 +24,10 @@ public class JdbcTimeEntryRepository implements TimeEntryRepository {
 
     @Override
     public TimeEntry find(long id) {
-       List<TimeEntry> allTime =  jdbcTemplate.query("SELECT * FROM time_entries",
-                new ResultSetExtractor<List<TimeEntry>>() {
-
-                    @Override
-                    public List<TimeEntry> extractData(ResultSet rs)
-                            throws SQLException, DataAccessException {
-                        List<TimeEntry> list = new ArrayList<TimeEntry>();
-                        while(rs.next()){
-                            TimeEntry onerow = new TimeEntry();
-                            onerow.setId(rs.getLong("id"));
-                            onerow.setProjectId(rs.getLong("project_id"));
-                            onerow.setUserId(rs.getLong("user_id"));
-                            onerow.setDate(rs.getDate("date").toLocalDate());
-                            onerow.setHours(rs.getInt("hours"));
-                            list.add(onerow);
-                        }
-                        return list;
-                    }
-
-                });
-       if(allTime.size() == 0){
-           return null;
-       } else {
-           TimeEntry FirstTime = allTime.get(0);
-           return FirstTime;
-       }
-
+        return jdbcTemplate.query(
+                "SELECT id, project_id, user_id, date, hours FROM time_entries WHERE id = ?",
+                new Object[]{id},
+                extractor);
     }
 
     @Override
@@ -115,6 +92,17 @@ public class JdbcTimeEntryRepository implements TimeEntryRepository {
                 "',hours = " + timeEntry.getHours() + " where id = " + l);
         return find(l);
     }
+
+    private final RowMapper<TimeEntry> mapper = (rs, rowNum) -> new TimeEntry(
+            rs.getLong("id"),
+            rs.getLong("project_id"),
+            rs.getLong("user_id"),
+            rs.getDate("date").toLocalDate(),
+            rs.getInt("hours")
+    );
+
+    private final ResultSetExtractor<TimeEntry> extractor =
+            (rs) -> rs.next() ? mapper.mapRow(rs, 1) : null;
 
 
 }
